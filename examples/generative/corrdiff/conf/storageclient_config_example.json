@@ -1,0 +1,34 @@
+{
+    "pbss": {
+        "storage_provider": "s3",
+
+        "storage_options": {
+            "region_name": "us-east-1",
+            "endpoint_url": "https://pbss.s8k.io"
+        },
+
+        "credentials_provider": {
+            "type": "S3Credentials",
+            "options": {
+                "access_key": "",
+                "secret_key": ""
+            }
+        }
+    },
+    "pdx": {
+        "storage_provider": "s3",
+
+        "storage_options": {
+            "region_name": "us-east-1",
+            "endpoint_url": "https://pdx.s8k.io"
+        },
+
+        "credentials_provider": {
+            "type": "S3Credentials",
+            "options": {
+                "access_key": "",
+                "secret_key": ""
+            }
+        }
+    }
+}
