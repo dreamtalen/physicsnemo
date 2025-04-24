@@ -65,7 +65,22 @@ class _ZarrDataset(DownscalingDataset):
         self, path: str, get_target_normalization=get_target_normalizations_v1
     ):
         self.path = path
-        self.group = zarr.open_consolidated(path)
+        if path.startswith("/cwb-diffusions/data/"):
+            # Dataset stored in PBSS
+            from nvstorageclient import StorageClient, StorageClientConfig
+            from nvstorageclient.contrib import LazyZarrStore
+            import os
+            # Path to the Storage Client Config file for connecting to the object store.
+            # An example configuration without credentials can be found at /config/storage_client_example.json
+            os.environ['NV_STORAGE_CLIENT_CONFIG'] = '/code/e2_storage_client_config.json'
+            # Maximum number of worker threads the storage client can schedule.
+            os.environ['NVSTORAGECLIENT_MAX_WORKERS'] = '1'
+            storage_client_config = StorageClientConfig.from_file(profile="pbss")
+            storage_client = StorageClient(storage_client_config)
+            zarr_store = LazyZarrStore(storage_client, prefix=path+'/')
+            self.group = zarr.open_consolidated(zarr_store)
+        else:
+            self.group = zarr.open_consolidated(path)
         self.get_target_normalization = get_target_normalization
 
         # valid indices
